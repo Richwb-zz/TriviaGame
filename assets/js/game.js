@@ -69,23 +69,36 @@ function startTimer(){
 
 function countDown(){
 	timer--;
-
+	if(timer < 10){
 	// display countdown
-	$('#timer').html("<h2>" + timer + "</h2>");
-
+		$('#timer').html("<h2> 0" + timer + "</h2>");
+	}else{
+		$('#timer').html("<h2>" + timer + "</h2>");
+	}
 	if(timer == 0){
-		stopTimer();
+		timesUp();
 	}
 }
 
-//when timer and reset display to 0 
-function stopTimer(){
+//when timer reaches 0 function is called
+function timesUp(){
+	//loop through all buttons with answer class and call function
+	$(".answer").each(function(){
+		$(this).addClass("disabled");	
+		showAnswer(this);
+	});
+
 	clearInterval(timerCount);
-	$('#timer').html("<h2>10</h2>");
 }
 
-function timesUp(){
-
+// process button click and timeout to display answer 
+function showAnswer(guess){
+	//compare button clicked with the answer and process
+	if($(guess).text() === trueAnswer){
+		$(guess).addClass("btn-success");
+	}else{
+		$(guess).addClass("btn-danger");
+	}
 }
 
 //button events
@@ -99,10 +112,5 @@ $(".btn").hover(function(){
 
 
 $(".btn").click(function(){
-	if($(this).text() === trueAnswer){
-		$(this).addClass("btn-success");
-	}else{
-		$(this).addClass("btn-danger");
-	}
-
+	showAnswer(this);
 });
