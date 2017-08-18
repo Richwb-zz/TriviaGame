@@ -2,7 +2,7 @@ var timerCount = 0;
 var timer = 10;
 
 
-
+//  Timer functions
 function startTimer(){
 	timerCount = setInterval(countDown, 1000);
 }
@@ -29,3 +29,11 @@ function timesUp(){
 $('#timer').html("<h2>10</h2>");
 
 startTimer();
+
+//button events
+
+$(".btn").hover(function(){
+	$(this).addClass("btn-warning");
+},function(){
+	$(this).removeClass("btn-warning");
+});
