@@ -104,13 +104,11 @@ function showAnswer(guess){
 //button events
 
 // Change button style on hover
-$(".btn").hover(function(){
+$(".answer").hover(function(){
 	$(this).addClass("btn-warning");
 },function(){
 	$(this).removeClass("btn-warning");
 });
 
-
-$(".btn").click(function(){
-	showAnswer(this);
-});
+//When clicking an answer call function
+$(".answer").click(showAnswer(this));
