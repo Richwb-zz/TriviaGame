@@ -69,12 +69,14 @@ function startTimer(){
 
 function countDown(){
 	timer--;
-	if(timer < 10){
+	
 	// display countdown
+	if(timer < 10){
 		$('#timer').html("<h2> 0" + timer + "</h2>");
 	}else{
 		$('#timer').html("<h2>" + timer + "</h2>");
 	}
+
 	if(timer == 0){
 		timesUp();
 	}
@@ -82,26 +84,53 @@ function countDown(){
 
 //when timer reaches 0 function is called
 function timesUp(){
-	//loop through all buttons with answer class and call function
-	$(".answer").each(function(){
-		$(this).addClass("disabled");	
-		showAnswer(this);
+	// Increase wrong score by 1
+	$("#wrong").text(parseInt($("#wrong").text()) + 1);
+	
+	// Stop timer
+	clearInterval(timerCount);
+
+	// Loop through all buttons with answer class and call function
+	$(".answer").each(function(){	
+		showAnswer(this, false);
 	});
 
-	clearInterval(timerCount);
+	// Calculate total games played
+	calcTotal();
 }
 
-// process button click and timeout to display answer 
-function showAnswer(guess){
-	//compare button clicked with the answer and process
+// Process button click and timeout to display answer 
+function showAnswer(guess, clicked){
+	
+	// Disable all buttons
+	$(guess).addClass("disabled");
+
+	//Compare button clicked with the answer and process
 	if($(guess).text() === trueAnswer){
+		
 		$(guess).addClass("btn-success");
+		
+		// Check if event if from timeout or button click
+		if(clicked){
+			$("#correct").text(parseInt($("#correct").text()) + 1);
+		}
 	}else{
+		
 		$(guess).addClass("btn-danger");
+
+		// Check if event if from timeout or button click
+		if(clicked){
+			$("#wrong").text(parseInt($("#wrong").text()) + 1);
+		}
 	}
 }
 
-//button events
+function calcTotal(){
+	// Add wrong + correct scores to get total score
+	$("#total").text(parseInt($("#wrong").text()) + parseInt($("#correct").text()));
+}
+
+// Button events
 
 // Change button style on hover
 $(".answer").hover(function(){
@@ -110,5 +139,11 @@ $(".answer").hover(function(){
 	$(this).removeClass("btn-warning");
 });
 
-//When clicking an answer call function
-$(".answer").click(showAnswer(this));
+// When clicking an answer call function
+$(".answer").click(function(){
+	clearInterval(timerCount);
+	showAnswer(this, true);
+	
+	// Calculate total games played
+	calcTotal();
+});
