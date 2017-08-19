@@ -1,5 +1,5 @@
 // logical timer;
-var timerCount = 0;
+var timerCount;
 // count down timer
 var timer = 10;
 // Loop through randomAnswerSet while assigning answers to buttons 
@@ -10,14 +10,14 @@ trueAnswer = "";
 // holds questions and answers. True answer is always 0
 var questions = [["What is 5 + 5", "10", "5", "15", "11"],["What is 6 + 5", "11", "5", "15", "10"]];
 
-//display timer at 0 while not counting down
-$('#timer').html("<h2>10</h2>");
-
-getQuestion();
+// Ensures all values are correctly set
+reset();
 
 // Get and display questions
 function getQuestion(){
-	
+	// Hide next question button
+	$("#next").addClass("hidden");
+
 	// Holds the 2D array for the selected question
 	var questionSetMd = [];
 	// Used to hold the 1D information of the selected section from questions array
@@ -97,6 +97,8 @@ function timesUp(){
 
 	// Calculate total games played
 	calcTotal();
+	// Show next question button
+	$("#next").removeClass("hidden");
 }
 
 // Process button click and timeout to display answer 
@@ -130,6 +132,19 @@ function calcTotal(){
 	$("#total").text(parseInt($("#wrong").text()) + parseInt($("#correct").text()));
 }
 
+// Reset buttons and timer
+function reset(){
+	
+	$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
+	$("#next").addClass("hidden");
+
+	$('#timer').html("<h2>10</h2>");
+
+	timer = 10;
+
+	getQuestion();
+}
+
 // Button events
 
 // Change button style on hover
@@ -146,4 +161,8 @@ $(".answer").click(function(){
 	
 	// Calculate total games played
 	calcTotal();
+	// Show next question button
+	$("#next").removeClass("hidden");
 });
+
+$("#next").click(reset);
