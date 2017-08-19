@@ -8,7 +8,7 @@ var loop = 0;
 trueAnswer = "";
 
 // holds questions and answers. True answer is always 0
-var questions = [["What is 5 + 5", "10", "5", "15", "11"],["What is 6 + 5", "11", "5", "15", "10"]];
+var questions = [["What is 5 + 5", "10", "5", "15", "11"],["What is 6 + 5", "11", "3", "17", "20"]];
 
 // Ensures all values are correctly set
 reset();
@@ -30,9 +30,10 @@ function getQuestion(){
 	var length = 0;
 	
 
-	// get random question in 2D form
+	// Get random question in 2D form
 	questionSetMd = questions.splice(Math.round(Math.random() * (questions.length - 1)),1);
-	//converts array from 2D to 1D
+	
+	// Converts array from 2D to 1D
 	for (var i = 0; i < questionSetMd[0].length; i++) {
 		questionSet[i] = questionSetMd[0][i];
 	}
@@ -49,7 +50,8 @@ function getQuestion(){
 	for (var i = 0; i < length; i++) {
 
 		 randomAnswerSet[i] = answerSet[(Math.round(Math.random() * (answerSet.length -1)))];
-		 // remove the selected answer from the list so it cannot be choosen again
+		 
+		 // Remove the selected answer from the list so it cannot be choosen again
 		 answerSet.splice(answerSet.indexOf(randomAnswerSet[i]),1);
 	}
 
@@ -58,6 +60,9 @@ function getQuestion(){
 		$(this).text(randomAnswerSet[loop]);
 		loop++;
 	});
+
+	// reset answer looper
+	loop = 0;
 
 	startTimer();
 }
@@ -70,7 +75,7 @@ function startTimer(){
 function countDown(){
 	timer--;
 	
-	// display countdown
+	// Display countdown
 	if(timer < 10){
 		$('#timer').html("<h2> 0" + timer + "</h2>");
 	}else{
@@ -78,50 +83,57 @@ function countDown(){
 	}
 
 	if(timer == 0){
-		timesUp();
+		processAnswer(true);
 	}
 }
 
-//when timer reaches 0 function is called
-function timesUp(){
-	// Increase wrong score by 1
-	$("#wrong").text(parseInt($("#wrong").text()) + 1);
+// When timer reaches 0 function is called
+function processAnswer(timeEnd, guess=""){
 	
 	// Stop timer
 	clearInterval(timerCount);
 
-	// Loop through all buttons with answer class and call function
-	$(".answer").each(function(){	
-		showAnswer(this, false);
-	});
+	// Disable answer buttons
+	$(".answer").addClass("disabled");
+	
+	// Check if function is running due to timer reaching 0
+	if(timeEnd){
+		// Increase wrong score by 1
+		$("#wrong").text(parseInt($("#wrong").text()) + 1);
+		
+		// Loop through all buttons with answer class
+		$(".answer").each(function(){	
+			checkAnswer(this, false);
+		});
+	
+	}else{
+		checkAnswer(guess, true);
+	}
+
+	// Show next question button
+	$("#next").removeClass("hidden");
 
 	// Calculate total games played
 	calcTotal();
-	// Show next question button
-	$("#next").removeClass("hidden");
 }
 
-// Process button click and timeout to display answer 
-function showAnswer(guess, clicked){
-	
-	// Disable all buttons
-	$(guess).addClass("disabled");
-
-	//Compare button clicked with the answer and process
-	if($(guess).text() === trueAnswer){
+function checkAnswer(answer, clicked){
+	// Set class based on answer
+	if($(answer).text() === trueAnswer){
 		
-		$(guess).addClass("btn-success");
+		$(answer).addClass("btn-success");
 		
-		// Check if event if from timeout or button click
-		if(clicked){
+		// If button was clicked and correct
+		if (clicked) {
 			$("#correct").text(parseInt($("#correct").text()) + 1);
 		}
+	
 	}else{
 		
-		$(guess).addClass("btn-danger");
+		$(answer).addClass("btn-danger");
 
-		// Check if event if from timeout or button click
-		if(clicked){
+		// If button was clicked and wrong
+		if (clicked) {
 			$("#wrong").text(parseInt($("#wrong").text()) + 1);
 		}
 	}
@@ -135,11 +147,21 @@ function calcTotal(){
 // Reset buttons and timer
 function reset(){
 	
+	// Reset answer button classes
 	$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
-	$("#next").addClass("hidden");
+	
+	// Clear answer text
+	$(".answer").text("");
 
+	// Clear question text
+	$("#question").text("");
+
+	// Hide next question button
+	$("#next").addClass("hidden");
+	// Set timer display back to 10
 	$('#timer').html("<h2>10</h2>");
 
+	// Set timer back to 10
 	timer = 10;
 
 	getQuestion();
@@ -156,13 +178,7 @@ $(".answer").hover(function(){
 
 // When clicking an answer call function
 $(".answer").click(function(){
-	clearInterval(timerCount);
-	showAnswer(this, true);
-	
-	// Calculate total games played
-	calcTotal();
-	// Show next question button
-	$("#next").removeClass("hidden");
+	processAnswer(false, this);
 });
 
 $("#next").click(reset);
