@@ -147,24 +147,30 @@ function calcTotal(){
 // Reset buttons and timer
 function reset(){
 	
-	// Reset answer button classes
-	$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
+	if(questions.length !== 0){
+		
+		// Reset answer button classes
+		$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
+		
+		// Clear answer text
+		$(".answer").text("");
+
+		// Clear question text
+		$("#question").text("");
+
+		// Hide next question button
+		$("#next").addClass("hidden");
+		// Set timer display back to 10
+		$('#timer').html("<h2>10</h2>");
+
+		// Set timer back to 10
+		timer = 10;
+
+		getQuestion();
 	
-	// Clear answer text
-	$(".answer").text("");
-
-	// Clear question text
-	$("#question").text("");
-
-	// Hide next question button
-	$("#next").addClass("hidden");
-	// Set timer display back to 10
-	$('#timer').html("<h2>10</h2>");
-
-	// Set timer back to 10
-	timer = 10;
-
-	getQuestion();
+	}else{
+		$("#resultsmodal").modal("show");
+	}
 }
 
 // Button events
