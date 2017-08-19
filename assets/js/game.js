@@ -8,7 +8,7 @@ var loop = 0;
 trueAnswer = "";
 
 // holds questions and answers. True answer is always 0
-var questions = [["What is 5 + 5", "10", "5", "15", "11"],["What is 6 + 5", "11", "3", "17", "20"]];
+var questions = [["How many teeth do goats and sheep have on their upper jaw?", "None", "14", "8", "24"],["How many pounds of wool can a mature ewe produce in a year?", "7-10", "15-18", "24-27", "40-43"],["What is the closest living relative to the T-Rex?","Chicken","Aligator","Ostrich","Snake"],["Cows have a memory span of:","3 years","3 weeks", "3hours","3 days"],["How fast can a pig run?","11 mph", "5 mph", "20 mph","30 mph"],["Goats have rectanglular pupils to...","see well in the dark","see behind them","see color","protect them from sun glare","to see further"];
 
 // Ensures all values are correctly set
 reset();
@@ -18,8 +18,6 @@ function getQuestion(){
 	// Hide next question button
 	$("#next").addClass("hidden");
 
-	// Holds the 2D array for the selected question
-	var questionSetMd = [];
 	// Used to hold the 1D information of the selected section from questions array
 	var questionSet = [];
 	// Holders the answers to be displayed
@@ -29,14 +27,8 @@ function getQuestion(){
 	// Original length of answerSet before splicing
 	var length = 0;
 	
-
-	// Get random question in 2D form
-	questionSetMd = questions.splice(Math.round(Math.random() * (questions.length - 1)),1);
-	
-	// Converts array from 2D to 1D
-	for (var i = 0; i < questionSetMd[0].length; i++) {
-		questionSet[i] = questionSetMd[0][i];
-	}
+	// Get random question from questions array and pop it out of the 2D array
+	questionSet = questions.splice(Math.round(Math.random() * (questions.length - 1)),1).pop();
 	
 	// Sets question in html
 	$("#question").text(questionSet[0]);
