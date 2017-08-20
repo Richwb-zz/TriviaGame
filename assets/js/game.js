@@ -8,7 +8,7 @@ var loop = 0;
 trueAnswer = "";
 
 // holds questions and answers. True answer is always 0
-var questions = [["How many teeth do goats and sheep have on their upper jaw?", "None", "14", "8", "24"],["How many pounds of wool can a mature ewe produce in a year?", "7-10", "15-18", "24-27", "40-43"],["What is the closest living relative to the T-Rex?","Chicken","Aligator","Ostrich","Snake"],["Cows have a memory span of:","3 years","3 weeks", "3hours","3 days"],["How fast can a pig run?","11 mph", "5 mph", "20 mph","30 mph"],["Goats have rectanglular pupils to...","see well in the dark","see behind them","see color","protect them from sun glare","to see further"];
+var questions = [["How many teeth do goats and sheep have on their upper jaw?", "None", "14", "8", "24"],["How many pounds of wool can a mature ewe produce in a year?", "7-10", "15-18", "24-27", "40-43"],["What is the closest living relative to the T-Rex?","Chicken","Aligator","Ostrich","Snake"],["Cows have a memory span of:","3 years","3 weeks", "3hours","3 days"],["How fast can a pig run?","11 mph", "5 mph", "20 mph","30 mph"],["Goats have rectanglular pupils to...","see well in the dark","see behind them","see color","protect them from sun glare","to see further"]];
 
 // Ensures all values are correctly set
 reset();
@@ -87,6 +87,7 @@ function processAnswer(timeEnd, guess=""){
 
 	// Disable answer buttons
 	$(".answer").addClass("disabled");
+	$(".answer").prop("disabled", true);
 	
 	// Check if function is running due to timer reaching 0
 	if(timeEnd){
@@ -102,9 +103,12 @@ function processAnswer(timeEnd, guess=""){
 		checkAnswer(guess, true);
 	}
 
+	if(questions.length == 0){
+		$("#resultsmodal").modal("show");
+	}else{
 	// Show next question button
-	$("#next").removeClass("hidden");
-
+		$("#next").removeClass("hidden");
+	}
 	// Calculate total games played
 	calcTotal();
 }
@@ -143,7 +147,7 @@ function reset(){
 		
 		// Reset answer button classes
 		$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
-		
+		$(".answer").prop('disabled', false);
 		// Clear answer text
 		$(".answer").text("");
 
