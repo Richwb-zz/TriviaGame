@@ -8,7 +8,7 @@ var loop = 0;
 trueAnswer = "";
 
 // holds questions and answers. True answer is always 0
-var questions = [["How many teeth do goats and sheep have on their upper jaw?", "None", "14", "8", "24"],["How many pounds of wool can a mature ewe produce in a year?", "7-10", "15-18", "24-27", "40-43"],["What is the closest living relative to the T-Rex?","Chicken","Aligator","Ostrich","Snake"],["Cows have a memory span of:","3 years","3 weeks", "3hours","3 days"],["How fast can a pig run?","11 mph", "5 mph", "20 mph","30 mph"],["Goats have rectanglular pupils to...","see well in the dark","see behind them","see color","protect them from sun glare","to see further"]];
+var questions = [["How many teeth do goats and sheep have on their upper jaw?", "None", "14", "8", "24"],["How many pounds of wool can a mature ewe produce in a year?", "7-10", "15-18", "24-27", "40-43"],["What is the closest living relative to the T-Rex?","Chicken","Aligator","Ostrich","Snake"],["Cows have a memory span of:","3 years","3 weeks", "3hours","3 days"],["How fast can a pig run?","11 mph", "5 mph", "20 mph","30 mph"],["Goats have rectanglular pupils to...","see well in the dark","see behind them","see color","protect them from sun glare","see further"]];
 
 // Ensures all values are correctly set
 reset();
@@ -69,6 +69,9 @@ function countDown(){
 	
 	// Display countdown
 	if(timer < 10){
+		if(timer <= 3){
+			$('#timer').addClass("red").removeClass("black");
+		}
 		$('#timer').html("<h2> 0" + timer + "</h2>");
 	}else{
 		$('#timer').html("<h2>" + timer + "</h2>");
@@ -103,7 +106,22 @@ function processAnswer(timeEnd, guess=""){
 		checkAnswer(guess, true);
 	}
 
+	// Check score and display response
 	if(questions.length == 0){
+
+		if(toString($("#total").text()) - toString($("#correct").text()) === 0){
+			$(".modal-body").text("Amazing! Are you related to Old Mcdonald!?");
+
+		}else if(toString($("#correct").text()) / toString($("#total").text()) > 0.75 ){
+			$(".modal-body").text("You're on your way to owning a farm!");
+
+		}else if(toString($("#correct").text()) / toString($("#total").text()) > 0.25 ){
+			$(".modal-body").text("Need to do some studying!");
+
+		}else{
+			$(".modal-body").text("You're not an animal person, are you?");
+		}
+
 		$("#resultsmodal").modal("show");
 	}else{
 	// Show next question button
@@ -142,8 +160,6 @@ function calcTotal(){
 
 // Reset buttons and timer
 function reset(){
-	
-	if(questions.length !== 0){
 		
 		// Reset answer button classes
 		$(".answer").removeClass("disabled").removeClass("btn-danger").removeClass("btn-success");
@@ -159,14 +175,12 @@ function reset(){
 		// Set timer display back to 10
 		$('#timer').html("<h2>10</h2>");
 
+		$('#timer').addClass("black").removeClass("red");
+
 		// Set timer back to 10
 		timer = 10;
 
 		getQuestion();
-	
-	}else{
-		$("#resultsmodal").modal("show");
-	}
 }
 
 // Button events
